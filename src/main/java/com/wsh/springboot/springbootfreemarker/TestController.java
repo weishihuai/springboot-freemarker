@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -40,7 +41,7 @@ public class TestController {
             //设置异常处理器
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.IGNORE_HANDLER);
             //获取ftl模板对象
-            Template template = configuration.getTemplate("freemarker.ftl");
+            Template template = configuration.getTemplate("export.ftl");
 
 //            //输出文件
 //            File outFile = new File(filePath+File.separator+fileName);
@@ -49,7 +50,7 @@ public class TestController {
 //                outFile.getParentFile().mkdirs();
 //            }
 //            //
-//            Writer out = new BufferedWriter将模板和数据模型合并生成文件(new OutputStreamWriter(new FileOutputStream(outFile),"UTF-8"));
+//            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile),"UTF-8"));
 
             //输出文档
             StringBuilder fileName = new StringBuilder("");
@@ -63,11 +64,19 @@ public class TestController {
                         + new String(fileName.toString().getBytes("GBK"), "ISO-8859-1"));
                 response.setCharacterEncoding("utf-8");//处理乱码问题
                 //生成Word文档
-                template.process(dataMap, response.getWriter());
+                Writer out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
+                template.process(dataMap, out);
+
+//                template.process(dataMap,response.getWriter());
+
+//                //关闭流
+                out.flush();
+                out.close();
+
+//                response.flushBuffer();
+
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-                response.flushBuffer();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,5 +107,41 @@ public class TestController {
         }
         dataMap.put("userList", users);
         return dataMap;
+    }
+
+    public void createWord(Map dataMap,String templateName,String filePath,String fileName){
+        try {
+            //创建配置实例
+            Configuration configuration = new Configuration();
+
+            //设置编码
+            configuration.setDefaultEncoding("UTF-8");
+
+            //ftl模板文件
+            configuration.setClassForTemplateLoading(this.getClass(),"/");
+
+            //获取模板
+            Template template = configuration.getTemplate(templateName);
+
+            //输出文件
+            File outFile = new File(filePath+File.separator+fileName);
+
+            //如果输出目标文件夹不存在，则创建
+            if (!outFile.getParentFile().exists()){
+                outFile.getParentFile().mkdirs();
+            }
+
+            //将模板和数据模型合并生成文件
+            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile),"UTF-8"));
+
+            //生成文件
+            template.process(dataMap, out);
+
+            //关闭流
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
