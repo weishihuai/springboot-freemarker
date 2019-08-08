@@ -975,7 +975,7 @@
                     <w:shd w:val="clear" w:color="auto" w:fill="A3B3C2"/>
                     <w:vAlign w:val="center"/>
                         </w:tcPr>
-                    <w:p wsp:rsidR="0072489F" wsp:rsidRPr="0048537B" wsp:rsidRDefault="0072489F"
+                    <#--<w:p wsp:rsidR="0072489F" wsp:rsidRPr="0048537B" wsp:rsidRDefault="0072489F"
                          wsp:rsidP="00E541C3">
                         <w:pPr>
                             <w:rPr>
@@ -983,7 +983,7 @@
                                 <w:sz-cs w:val="24"/>
                             </w:rPr>
                         </w:pPr>
-                    </w:p>
+                    </w:p>-->
                         <w:p wsp:rsidR="0072489F" wsp:rsidRPr="0048537B" wsp:rsidRDefault="0072489F"
                              wsp:rsidP="00E541C3">
                     <w:pPr>
@@ -1091,12 +1091,12 @@
                                 <w:sz w:val="24"/>
                                 <w:sz-cs w:val="24"/>
                             </w:rPr>
-                            <w:t>${(evaluationMap.GXXMC)!''} ${(evaluationMap.GRADE)!''} ${(evaluationMap.BZ)!''} ${(evaluationMap.GXXFS)!'0'}分
+                            <w:t>${(evaluationMap.GXXMC)!''} ${(evaluationMap.GRADE)!''} ${(evaluationMap.BZ)!''} ${(evaluationMap.GXXFS >= 0)?then('+', '-')}${(evaluationMap.GXXFS)!'0'}分
                             <#if evaluationMap.FILE?? && (evaluationMap.FILE?size > 0)>
-                            <#list evaluationMap.FILE as file>
-                                 ${(file.name)!''}
-                            </#list>
-                        </#if></w:t>
+                                <#list evaluationMap.FILE as file>
+                                    ${(file.name)!''}
+                                </#list>
+                            </#if></w:t>
                             </w:r>
                             </w:p>
                             </w:tc>
@@ -1120,7 +1120,7 @@
                                 <w:sz w:val="24"/>
                                 <w:sz-cs w:val="24"/>
                             </w:rPr>
-                            <w:t>${(evaluationMap.GXXFS)!'0'}分</w:t>
+                            <w:t>${(evaluationMap.GXXFS >= 0)?then('+', '-')}${(evaluationMap.GXXFS)!'0'}分</w:t>
                             </w:r>
                             </w:p>
                             </w:tc>
@@ -1149,7 +1149,7 @@
                                 <w:sz w:val="24"/>
                                 <w:sz-cs w:val="24"/>
                             </w:rPr>
-                            <w:t>${(evaluationMap.CPFS)!'0'}分</w:t>
+                            <w:t>${(evaluationMap.CPFS >= 0)?then('+', '-')}${(evaluationMap.CPFS)!'0'}分</w:t>
                             </w:r>
                             </w:p>
                             </w:tc>
